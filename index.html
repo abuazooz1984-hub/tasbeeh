@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>عداد التسبيح</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+</head>
+<body>
+  <h1>📿 عداد التسبيح</h1>
+  <p>كل ضغطة تنقص العدد واحدًا حتى تصل إلى الصفر.</p>
+  <button id="tasbeehBtn">تسبيح</button>
+  <p>المتبقي: <span id="remaining">100</span></p>
+<script>
+let remaining = 100;
+const btn = document.getElementById("tasbeehBtn");
+const remEl = document.getElementById("remaining");
+btn.addEventListener("click", ()=>{
+  if(remaining>0){ remaining--; remEl.textContent=remaining; }
+});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js');}
+</script>
+</body>
+</html>
