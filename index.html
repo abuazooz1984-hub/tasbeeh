@@ -3,18 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عداد التسبيح</title>
+  <title>📿 عداد التسبيح</title>
   <style>
     body {
       font-family: 'Tahoma', sans-serif;
-      background-color: #f4f7fb;
+      background: #f0f4f8;
       text-align: center;
       margin: 0;
       padding: 20px;
     }
     h1 {
       color: #2563eb;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+    }
+    p {
+      color: #444;
+      margin-bottom: 20px;
     }
     .stats {
       display: flex;
@@ -23,18 +27,28 @@
     }
     .box {
       background: #fff;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      width: 30%;
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      width: 28%;
+    }
+    .box div:first-child {
+      color: #666;
+      margin-bottom: 5px;
+    }
+    .box div:last-child {
+      font-size: 22px;
+      font-weight: bold;
+      color: #111;
     }
     .big {
-      font-size: 40px;
+      font-size: 45px;
       color: #111;
       margin: 15px 0;
+      font-weight: bold;
     }
     button {
-      background-color: #2563eb;
+      background: #2563eb;
       color: #fff;
       border: none;
       padding: 12px 20px;
@@ -42,9 +56,10 @@
       font-size: 18px;
       border-radius: 8px;
       cursor: pointer;
+      transition: background 0.2s;
     }
     button:hover {
-      background-color: #1e4ed8;
+      background: #1e40af;
     }
     .controls {
       margin-top: 15px;
@@ -53,7 +68,7 @@
       padding: 8px;
       margin: 8px;
       font-size: 16px;
-      border-radius: 5px;
+      border-radius: 6px;
       border: 1px solid #ccc;
     }
   </style>
@@ -73,8 +88,8 @@
 
   <button id="tasbeehBtn">تسبيح</button>
   <div class="controls">
-    <button id="undoBtn">تراجع</button>
-    <button id="resetBtn">إعادة الضبط</button>
+    <button id="undoBtn">↩️ تراجع</button>
+    <button id="resetBtn">🔄 إعادة الضبط</button>
   </div>
 
   <div class="controls">
@@ -107,7 +122,7 @@
         remaining--;
         done++;
         updateUI();
-        if (navigator.vibrate) navigator.vibrate(100); // الاهتزاز
+        if (navigator.vibrate) navigator.vibrate(100);
       }
     });
 
