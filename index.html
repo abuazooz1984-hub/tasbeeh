@@ -1,167 +1,235 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📿 عداد التسبيح</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <title>عداد التسبيح — 100 مرة</title>
+
+  <!-- PWA / iOS -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="التسبيح" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+
   <style>
-    body {
-      font-family: 'Tahoma', sans-serif;
-      background: #f0f4f8;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
+    :root{
+      --bg:#eef3f9; --card:#ffffff; --text:#0f172a; --muted:#64748b;
+      --primary:#2563eb; --primary-ink:#ffffff; --accent:#0ea5e9;
+      --ring: rgba(37,99,235,.25); --shadow: 0 14px 28px rgba(2,6,23,.10);
+      --border: rgba(148,163,184,.20); --soft: rgba(148,163,184,.12);
     }
-    h1 {
-      color: #2563eb;
-      margin-bottom: 5px;
+    .dark{
+      --bg:#0b1220; --card:#0f172a; --text:#e5e7eb; --muted:#94a3b8;
+      --primary:#60a5fa; --primary-ink:#0b1220; --accent:#38bdf8;
+      --ring: rgba(96,165,250,.25); --shadow: 0 14px 28px rgba(0,0,0,.45);
+      --border: rgba(148,163,184,.18); --soft: rgba(148,163,184,.10);
     }
-    p {
-      color: #444;
-      margin-bottom: 20px;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Naskh Arabic UI","Noto Sans Arabic","Cairo","Tajawal", Arial, sans-serif;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     }
-    .stats {
-      display: flex;
-      justify-content: space-around;
-      margin: 15px 0;
+    .wrap{min-height:100%; display:grid; place-items:center; padding:20px}
+    .card{
+      width:min(760px,100%); background:var(--card); border-radius:22px; padding:22px;
+      box-shadow:var(--shadow); border:1px solid var(--border)
     }
-    .box {
-      background: #fff;
-      padding: 12px;
-      border-radius: 12px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-      width: 28%;
+    h1{margin:0 0 8px; font-size:28px; font-weight:900; text-align:center}
+    .lead{margin:0 auto 16px; color:var(--muted); text-align:center; max-width:50ch; font-size:14px}
+    .cluster{display:flex; gap:12px; margin:14px 0 12px; flex-wrap:wrap}
+    .pill{flex:1; min-width:150px; background:linear-gradient(180deg, var(--soft), transparent);
+      border:1px solid var(--border); border-radius:14px; padding:14px; text-align:center}
+    .pill .n{font-size:30px; font-weight:900}
+    .pill .l{font-size:12px; color:var(--muted)}
+    progress{width:100%; height:14px; -webkit-appearance:none; appearance:none; border:none; border-radius:999px; overflow:hidden; background:var(--soft); margin:6px 0 10px}
+    progress::-webkit-progress-value{background:linear-gradient(90deg, var(--accent), var(--primary))}
+    progress::-moz-progress-bar{background:linear-gradient(90deg, var(--accent), var(--primary))}
+    .phrase{margin:8px 0 4px; font-size:18px; font-weight:800; text-align:center}
+    .big{font-size:92px; font-weight:900; text-align:center; margin:0; line-height:1}
+    .hint{color:var(--muted); font-size:13px; text-align:center; margin-bottom:14px}
+    .row{display:flex; gap:10px; margin:8px 0}
+    button,input,select{font:inherit}
+    .btn{
+      border:1px solid var(--border); background:var(--card); color:var(--text);
+      padding:16px; border-radius:16px; width:100%; font-weight:800; cursor:pointer; transition:transform .02s, border-color .2s, box-shadow .2s
     }
-    .box div:first-child {
-      color: #666;
-      margin-bottom: 5px;
+    .btn:active{transform:translateY(1px) scale(.995)}
+    .primary{background:linear-gradient(180deg, var(--primary), #1d4ed8); color:var(--primary-ink); border-color:transparent; box-shadow:0 10px 18px var(--ring)}
+    .btn[disabled]{opacity:.6; cursor:not-allowed}
+    .ctrl{flex:1; display:flex; flex-direction:column; gap:6px}
+    .ctrl label{font-size:12px; color:var(--muted)}
+    .ctrl input[type=number], .ctrl select{
+      border:1px solid var(--border); background:var(--card); color:var(--text); border-radius:12px; padding:12px 10px; width:100%
     }
-    .box div:last-child {
-      font-size: 22px;
-      font-weight: bold;
-      color: #111;
-    }
-    .big {
-      font-size: 45px;
-      color: #111;
-      margin: 15px 0;
-      font-weight: bold;
-    }
-    button {
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      padding: 12px 20px;
-      margin: 5px;
-      font-size: 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    button:hover {
-      background: #1e40af;
-    }
-    .controls {
-      margin-top: 15px;
-    }
-    select, input {
-      padding: 8px;
-      margin: 8px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
+    .switches{display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-top:6px}
+    .switch{display:inline-flex; align-items:center; gap:8px; color:var(--muted); font-size:13px; cursor:pointer; user-select:none}
+    .switch input{display:none}
+    .toggle{width:44px; height:24px; border-radius:999px; background:var(--soft); position:relative}
+    .toggle::after{content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.2); transition:left .2s}
+    .switch input:checked + .toggle{background:var(--primary)}
+    .switch input:checked + .toggle::after{left:23px}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; background:var(--soft); border:1px solid var(--border); padding:0 6px; border-radius:6px}
+    .done{display:none; margin-top:8px; padding:12px; background:linear-gradient(180deg, rgba(16,185,129,.18), rgba(16,185,129,.10)); border:1px solid rgba(16,185,129,.35); border-radius:12px; text-align:center}
+    @media (hover:hover){.btn:hover{border-color:var(--accent)}}
   </style>
 </head>
 <body>
-  <h1>📿 عداد التسبيح — 100 مرة</h1>
-  <p>كل ضغطة تُنقص العدد واحدًا حتى تصل إلى الصفر.</p>
+  <div class="wrap">
+    <main class="card" role="main" aria-labelledby="title">
+      <h1 id="title">عداد التسبيح — 100 مرة</h1>
+      <p class="lead">كل ضغطة تقلل الرقم واحدًا حتى تصل إلى الصفر. يمكنك تغيير العدد الكلي، والتراجع عن الضغطة الأخيرة، وإعادة الضبط في أي وقت.</p>
 
-  <div class="stats">
-    <div class="box"><div>الإجمالي</div><div id="total">100</div></div>
-    <div class="box"><div>المنجز</div><div id="done">0</div></div>
-    <div class="box"><div>المتبقي</div><div id="remaining">100</div></div>
-  </div>
+      <div class="cluster" aria-live="polite">
+        <div class="pill"><div class="n" id="remaining">100</div><div class="l">المتبقي</div></div>
+        <div class="pill"><div class="n" id="done">0</div><div class="l">المنجز</div></div>
+        <div class="pill"><div class="n" id="total">100</div><div class="l">الإجمالي</div></div>
+      </div>
 
-  <h2 id="phrase">الحمد لله</h2>
-  <div class="big" id="counter">100</div>
+      <progress id="progress" max="100" value="0" aria-label="التقدم"></progress>
 
-  <button id="tasbeehBtn">تسبيح</button>
-  <div class="controls">
-    <button id="undoBtn">↩️ تراجع</button>
-    <button id="resetBtn">🔄 إعادة الضبط</button>
-  </div>
+      <div class="phrase" id="phrase">الحمد لله</div>
+      <p class="big" id="bigCount">100</p>
+      <div class="hint">المتبقي حتى الإكمال</div>
 
-  <div class="controls">
-    <label>الإجمالي: <input type="number" id="totalInput" value="100"></label>
-    <label>العبارة: 
-      <select id="phraseSelect">
-        <option>سبحان الله</option>
-        <option>الحمد لله</option>
-        <option>الله أكبر</option>
-        <option>لا إله إلا الله</option>
-        <option>استغفر الله</option>
-        <option>لا إله إلا أنت سبحانك إني كنت من الظالمين</option>
-        <option>لا حول ولا قوة إلا بالله العلي العظيم</option>
-        <option>اللهم صل وسلم وبارك على سيدنا محمد</option>
-      </select>
-    </label>
+      <div class="row">
+        <button id="tasbeehBtn" class="btn primary" aria-label="تسبيح (Space)">تسبيح</button>
+      </div>
+      <div class="row">
+        <button id="undoBtn" class="btn" disabled>تراجع</button>
+        <button id="resetBtn" class="btn">إعادة الضبط</button>
+      </div>
+
+      <div class="row" role="group" aria-label="الإعدادات">
+        <div class="ctrl">
+          <label for="totalInput">الإجمالي (عدد التسبيحات)</label>
+          <input id="totalInput" type="number" min="1" max="10000" step="1" value="100" inputmode="numeric" pattern="[0-9]*">
+        </div>
+        <div class="ctrl">
+          <label for="phraseSelect">العبارة</label>
+          <select id="phraseSelect">
+            <option value="سبحان الله">سبحان الله</option>
+            <option value="الحمد لله" selected>الحمد لله</option>
+            <option value="الله أكبر">الله أكبر</option>
+            <option value="لا إله إلا الله">لا إله إلا الله</option>
+            <option value="استغفر الله">استغفر الله</option>
+            <option value="لا إله إلا أنت سبحانك إني كنت من الظالمين">لا إله إلا أنت سبحانك إني كنت من الظالمين</option>
+            <option value="لا حول ولا قوة إلا بالله العلي العظيم">لا حول ولا قوة إلا بالله العلي العظيم</option>
+            <option value="اللهم صل وسلم وبارك على سيدنا محمد">اللهم صل وسلم وبارك على سيدنا محمد</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="switches">
+        <label class="switch"><input id="darkToggle" type="checkbox"><span class="toggle"></span><span>الوضع الداكن</span></label>
+        <label class="switch"><input id="soundToggle" type="checkbox" checked><span class="toggle"></span><span>صوت</span></label>
+        <label class="switch"><input id="vibrateToggle" type="checkbox" checked><span class="toggle"></span><span>اهتزاز</span></label>
+      </div>
+
+      <div id="doneBanner" class="done" role="status">تم الإكمال! بارك الله فيك.</div>
+      <p style="margin-top:8px; color:var(--muted); font-size:12px; text-align:center">
+        اختصار لوحة المفاتيح: <span class="kbd">Space</span> للتسبيح، و<span class="kbd">Backspace</span> للتراجع.
+      </p>
+    </main>
   </div>
 
   <script>
-    let total = 100, remaining = 100, done = 0;
-    const totalEl = document.getElementById("total");
-    const remainingEl = document.getElementById("remaining");
-    const doneEl = document.getElementById("done");
-    const counterEl = document.getElementById("counter");
-    const phraseEl = document.getElementById("phrase");
-    const btn = document.getElementById("tasbeehBtn");
+  (function(){
+    const $ = id => document.getElementById(id);
+    const state = { total:100, remaining:100, history:[], dark:false, sound:true, vibrate:true, phrase:"الحمد لله" };
+    try{ Object.assign(state, JSON.parse(localStorage.getItem("tasbeeh:v1")||"{}")); }catch(e){}
 
-    btn.addEventListener("click", () => {
-      if (remaining > 0) {
-        remaining--;
-        done++;
-        updateUI();
-        if (navigator.vibrate) navigator.vibrate(100);
+    const remainingEl=$("remaining"), doneEl=$("done"), totalEl=$("total"), bigCountEl=$("bigCount");
+    const progressEl=$("progress"), tasbeehBtn=$("tasbeehBtn"), undoBtn=$("undoBtn"), resetBtn=$("resetBtn");
+    const totalInput=$("totalInput"), darkToggle=$("darkToggle"), soundToggle=$("soundToggle"), vibrateToggle=$("vibrateToggle");
+    const phraseEl=$("phrase"), phraseSelect=$("phraseSelect"), doneBanner=$("doneBanner");
+
+    // صوت خفيف
+    let audioCtx;
+    function beep(){
+      if(!state.sound) return;
+      try{
+        if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+        const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+        o.type="sine"; o.frequency.value=880; g.gain.value=0.0001; o.connect(g); g.connect(audioCtx.destination); o.start();
+        const t=audioCtx.currentTime;
+        g.gain.exponentialRampToValueAtTime(0.05, t+.001);
+        g.gain.exponentialRampToValueAtTime(0.0001, t+.07);
+        o.stop(t+.08);
+      }catch(e){}
+    }
+    // اهتزاز (مع بديل بصري على iOS)
+    function vibrate(){
+      if('vibrate' in navigator && state.vibrate){ navigator.vibrate(30); }
+      else{
+        tasbeehBtn.animate([{transform:'scale(1)'},{transform:'scale(0.97)'},{transform:'scale(1)'}],{duration:120,easing:'ease-out'});
       }
-    });
-
-    document.getElementById("undoBtn").addEventListener("click", () => {
-      if (done > 0) {
-        remaining++;
-        done--;
-        updateUI();
-      }
-    });
-
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      resetCounter();
-    });
-
-    document.getElementById("totalInput").addEventListener("change", e => {
-      total = parseInt(e.target.value) || 100;
-      resetCounter();
-    });
-
-    document.getElementById("phraseSelect").addEventListener("change", e => {
-      phraseEl.textContent = e.target.value;
-      resetCounter();
-    });
-
-    function updateUI() {
-      totalEl.textContent = total;
-      remainingEl.textContent = remaining;
-      doneEl.textContent = done;
-      counterEl.textContent = remaining;
     }
 
-    function resetCounter() {
-      remaining = total;
-      done = 0;
-      updateUI();
+    function persist(){ localStorage.setItem("tasbeeh:v1", JSON.stringify({total:state.total, remaining:state.remaining, dark:state.dark, sound:state.sound, vibrate:state.vibrate, phrase:state.phrase})); }
+    function applyTheme(){ document.documentElement.classList.toggle("dark", state.dark); darkToggle.checked = state.dark; }
+
+    function render(){
+      remainingEl.textContent = state.remaining;
+      doneEl.textContent = state.total - state.remaining;
+      totalEl.textContent = state.total;
+      bigCountEl.textContent = state.remaining;
+      progressEl.max = state.total; progressEl.value = state.total - state.remaining;
+      undoBtn.disabled = state.history.length === 0;
+      phraseEl.textContent = state.phrase;
+      totalInput.value = state.total; phraseSelect.value = state.phrase;
+      doneBanner.style.display = state.remaining === 0 ? "block" : "none";
+      document.title = `(${state.remaining}) عداد التسبيح`;
     }
 
-    updateUI();
+    function setTotal(n){
+      n=Math.max(1, Math.min(10000, Math.floor(n||1)));
+      state.total=n; state.remaining=n; state.history=[]; render(); persist();
+    }
+    function tasbeeh(){ if(state.remaining<=0) return; state.history.push(state.remaining); state.remaining--; render(); persist(); beep(); vibrate(); }
+    function undo(){ if(state.history.length===0) return; state.remaining = state.history.pop(); render(); persist(); }
+    function reset(){ state.remaining = state.total; state.history = []; render(); persist(); }
+
+    // تهيئة
+    applyTheme(); render();
+
+    // أحداث
+    tasbeehBtn.addEventListener("click", tasbeeh);
+    undoBtn.addEventListener("click", undo);
+    resetBtn.addEventListener("click", reset);
+    totalInput.addEventListener("change", e=> setTotal(parseInt(e.target.value,10)));
+    darkToggle.addEventListener("change", e=>{ state.dark=e.target.checked; applyTheme(); persist(); });
+    soundToggle.addEventListener("change", e=>{ state.sound=e.target.checked; persist(); });
+    vibrateToggle.addEventListener("change", e=>{ state.vibrate=e.target.checked; persist(); });
+    phraseSelect.addEventListener("change", e=>{
+      state.phrase=e.target.value;
+      // تصفير العداد عند تبديل العبارة
+      setTotal(state.total);
+    });
+
+    // اختصارات لوحة المفاتيح
+    window.addEventListener("keydown", e=>{
+      if(e.code==="Space"){ e.preventDefault(); tasbeeh(); }
+      if(e.code==="Backspace"){ e.preventDefault(); undo(); }
+    }, {passive:false});
+
+    // إخفاء خيار الاهتزاز على iOS (غير مدعوم)
+    if(!('vibrate' in navigator)){
+      vibrateToggle.checked=false; vibrateToggle.disabled=true;
+      const label = vibrateToggle.parentElement; const note=document.createElement('span');
+      note.style.fontSize='12px'; note.style.color='var(--muted)'; note.style.marginInlineStart='6px';
+      note.textContent='غير مدعوم على iOS';
+      label.appendChild(note);
+    }
+
+    // Service Worker (لو موجود sw.js)
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', ()=> navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+    }
+  })();
   </script>
 </body>
 </html>
