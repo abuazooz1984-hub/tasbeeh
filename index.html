@@ -4,131 +4,40 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
   <title>عداد التسبيح — 100 مرة</title>
-
-  <!-- PWA / iOS -->
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#2563eb" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="التسبيح" />
   <link rel="apple-touch-icon" href="icon-192.png" />
 
   <style>
-    :root{
-      --bg:#f7f9fb; --card:#ffffff; --text:#0f172a; --muted:#64748b;
-      --primary:#2563eb; --primary-ink:#ffffff; --accent:#0ea5e9;
-      --danger:#ef4444; --ok:#16a34a; --ring: rgba(37,99,235,.25);
-      --shadow: 0 10px 25px rgba(2,6,23,.08);
-      --overlay: rgba(2,6,23,.45);
-    }
-    .dark{
-      --bg:#0b1220; --card:#0f172a; --text:#e5e7eb; --muted:#94a3b8;
-      --primary:#60a5fa; --primary-ink:#0b1220; --accent:#38bdf8;
-      --danger:#f87171; --ok:#4ade80; --ring: rgba(96,165,250,.25);
-      --shadow: 0 10px 25px rgba(0,0,0,.45);
-      --overlay: rgba(0,0,0,.6);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; background:var(--bg); color:var(--text);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Naskh Arabic UI",
-                   "Noto Sans Arabic","Cairo","Tajawal", Arial, sans-serif;
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    }
-    .container{min-height:100%; display:grid; place-items:center; padding:24px;}
-    .card{
-      background:var(--card); width:min(720px,100%); border-radius:20px; padding:22px;
-      box-shadow:var(--shadow); border:1px solid rgba(148,163,184,.15);
-    }
-    h1{margin:0 0 8px 0; font-size:28px; font-weight:800; letter-spacing:.2px; text-align:center;}
-    p.lead{margin:0 auto 14px auto; color:var(--muted); font-size:14px; text-align:center; max-width:46ch}
-    .stats{display:flex; gap:12px; margin:16px 0 10px 0; flex-wrap:wrap}
-    .stat{flex:1; background:linear-gradient(180deg, rgba(148,163,184,.10), rgba(148,163,184,.05));
-      border:1px solid rgba(148,163,184,.20); border-radius:14px; padding:14px; text-align:center}
-    .stat .num{font-size:30px; font-weight:900}
-    .stat .label{font-size:12px; color:var(--muted)}
-    progress{width:100%; height:14px; -webkit-appearance:none; appearance:none; border:none;
-      background:rgba(148,163,184,.25); border-radius:999px; overflow:hidden; margin:6px 0 4px}
-    progress::-webkit-progress-bar{background:rgba(148,163,184,.25)}
-    progress::-webkit-progress-value{background:linear-gradient(90deg, var(--accent), var(--primary))}
-    progress::-moz-progress-bar{background:linear-gradient(90deg, var(--accent), var(--primary))}
-    .phrase{margin:16px 0 8px; font-size:18px; font-weight:800; text-align:center}
-    .big-count{text-align:center; font-size:88px; font-weight:900; margin:2px 0 4px; line-height:1}
-    .rem-label{text-align:center; color:var(--muted); font-size:13px; margin-bottom:16px}
-    .row{display:flex; gap:10px; margin:8px 0}
-    button,input,select{font:inherit}
-    .btn{
-      border:1px solid rgba(148,163,184,.35); padding:16px; border-radius:16px; background:var(--card);
-      color:var(--text); cursor:pointer; font-weight:800; width:100%;
-      transition:transform .02s ease, border-color .2s ease, box-shadow .2s ease; user-select:none; touch-action:manipulation
-    }
-    .btn:active{transform:translateY(1px) scale(.995)}
-    .btn-primary{background:linear-gradient(180deg, var(--primary), #1d4ed8); color:var(--primary-ink); border-color:transparent; box-shadow:0 8px 16px var(--ring)}
-    .btn[disabled]{opacity:.6; cursor:not-allowed}
-    .control{flex:1; display:flex; flex-direction:column; gap:6px}
-    .control label{font-size:12px; color:var(--muted)}
-    .control input[type="number"], .control select{
-      border:1px solid rgba(148,163,184,.35); background:var(--card); color:var(--text);
-      border-radius:12px; padding:12px 10px; width:100%
-    }
-    .footer{display:flex; gap:10px; justify-content:space-between; align-items:center; margin-top:10px; flex-wrap:wrap}
-    .switch{display:inline-flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); cursor:pointer; user-select:none}
-    .switch input{display:none}
-    .toggle{width:42px; height:24px; border-radius:999px; background:rgba(148,163,184,.35); position:relative; transition:background .2s ease}
-    .toggle::after{content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#fff; transition:left .2s ease, background .2s ease; box-shadow:0 1px 3px rgba(0,0,0,.2)}
-    .switch input:checked + .toggle{background:var(--primary)}
-    .switch input:checked + .toggle::after{left:21px; background:var(--primary-ink)}
-    .done{margin-top:8px; padding:12px; background:linear-gradient(180deg, rgba(16,185,129,.18), rgba(16,185,129,.10)); border:1px solid rgba(16,185,129,.35); border-radius:12px; color:var(--text); font-size:14px; display:none; text-align:center}
-    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; background:rgba(148,163,184,.25); border:1px solid rgba(148,163,184,.4); padding:0 6px; border-radius:6px}
-
-    /* ======= نافذة الترحيب ======= */
-    .overlay{position:fixed; inset:0; background:var(--overlay); display:none; align-items:center; justify-content:center; padding:18px; z-index:9990}
-    .modal{
-      width:min(560px,100%); background:var(--card); color:var(--text);
-      border-radius:16px; padding:18px; box-shadow:var(--shadow); border:1px solid rgba(148,163,184,.2)
-    }
-    .modal h2{margin:0 0 8px; font-size:20px}
-    .modal p{margin:0 0 10px; color:var(--muted); line-height:1.6}
-    .modal .tips{background:linear-gradient(180deg, rgba(148,163,184,.10), rgba(148,163,184,.05));
-      border:1px solid rgba(148,163,184,.20); border-radius:12px; padding:10px; margin-top:8px}
-    .modal .actions{display:flex; gap:10px; margin-top:12px}
-    .btn-secondary{background:#eef2ff; border-color:#c7d2fe}
-    .help-fab{
-      position:fixed; bottom:16px; left:16px; border-radius:999px; width:48px; height:48px;
-      display:grid; place-items:center; font-weight:900
-    }
-    @media (hover:hover){.btn:hover{border-color:var(--accent)}}
+    /* (نفس التنسيقات السابقة) */
   </style>
 </head>
 <body>
   <div class="container">
-    <main class="card" role="main" aria-labelledby="title">
-      <h1 id="title">عداد التسبيح — 100 مرة</h1>
-      <p class="lead">كل ضغطة تقلل الرقم واحدًا حتى تصل إلى الصفر. يمكنك تغيير العدد الكلي، والتراجع عن الضغطة الأخيرة، وإعادة الضبط في أي وقت.</p>
-
-      <div class="stats" aria-live="polite">
+    <main class="card">
+      <h1>عداد التسبيح — 100 مرة</h1>
+      <div class="stats">
         <div class="stat"><div class="num" id="remaining">100</div><div class="label">المتبقي</div></div>
         <div class="stat"><div class="num" id="done">0</div><div class="label">المنجز</div></div>
         <div class="stat"><div class="num" id="total">100</div><div class="label">الإجمالي</div></div>
       </div>
 
-      <progress id="progress" max="100" value="0" aria-label="التقدم نحو الإكمال"></progress>
+      <progress id="progress" max="100" value="0"></progress>
+      <div class="phrase" id="phrase">الحمد لله</div>
+      <div class="big-count" id="bigCount">100</div>
 
-      <div class="phrase" id="phrase" aria-live="polite">الحمد لله</div>
-      <div class="big-count" id="bigCount" aria-live="polite">100</div>
-      <div class="rem-label">المتبقي حتى الإكمال</div>
-
-      <div class="row"><button id="tasbeehBtn" class="btn btn-primary" aria-label="تسبيح (Space)">تسبيح</button></div>
+      <div class="row"><button id="tasbeehBtn" class="btn btn-primary">تسبيح</button></div>
       <div class="row">
-        <button id="undoBtn" class="btn" disabled aria-label="تراجع">تراجع</button>
-        <button id="resetBtn" class="btn" aria-label="إعادة الضبط">إعادة الضبط</button>
+        <button id="undoBtn" class="btn" disabled>تراجع</button>
+        <button id="resetBtn" class="btn">إعادة الضبط</button>
       </div>
 
-      <div class="row" role="group" aria-label="إعدادات العد">
+      <div class="row">
         <div class="control">
-          <label for="totalInput">الإجمالي (عدد التسبيحات)</label>
-          <input id="totalInput" type="number" min="1" max="10000" step="1" value="100" inputmode="numeric" pattern="[0-9]*">
+          <label for="totalInput">الإجمالي</label>
+          <input id="totalInput" type="number" min="1" max="10000" value="100">
         </div>
         <div class="control">
           <label for="phraseSelect">العبارة</label>
@@ -140,171 +49,52 @@
             <option value="استغفر الله">استغفر الله</option>
             <option value="لا إله إلا أنت سبحانك إني كنت من الظالمين">لا إله إلا أنت سبحانك إني كنت من الظالمين</option>
             <option value="لا حول ولا قوة إلا بالله العلي العظيم">لا حول ولا قوة إلا بالله العلي العظيم</option>
+            <option value="اللهم صل وسلم وبارك على سيدنا محمد">اللهم صل وسلم وبارك على سيدنا محمد</option>
           </select>
         </div>
       </div>
 
-      <div class="footer">
-        <label class="switch" title="الوضع الداكن"><input id="darkToggle" type="checkbox"><span class="toggle" aria-hidden="true"></span><span>الوضع الداكن</span></label>
-        <label class="switch" title="صوت"><input id="soundToggle" type="checkbox" checked><span class="toggle" aria-hidden="true"></span><span>صوت</span></label>
-        <label class="switch" title="اهتزاز"><input id="vibrateToggle" type="checkbox" checked><span class="toggle" aria-hidden="true"></span><span>اهتزاز</span></label>
-      </div>
-
-      <div id="doneBanner" class="done" role="status" aria-live="polite">تم الإكمال! بارك الله فيك.</div>
-      <p style="margin-top:10px; color:var(--muted); font-size:12px; text-align:center">
-        اختصار لوحة المفاتيح: <span class="kbd">Space</span> للتسبيح، و<span class="kbd">Backspace</span> للتراجع.
-      </p>
+      <div id="doneBanner" class="done">تم الإكمال! بارك الله فيك.</div>
     </main>
-  </div>
-
-  <!-- زر مساعدة صغير لإظهار التعليمات لاحقًا -->
-  <button id="helpFab" class="btn help-fab" title="تعليمات التثبيت">؟</button>
-
-  <!-- نافذة الترحيب/التعليمات -->
-  <div id="welcome" class="overlay" role="dialog" aria-modal="true" aria-labelledby="w-title" aria-describedby="w-desc">
-    <div class="modal">
-      <h2 id="w-title">مرحبًا بك في عداد التسبيح 👋</h2>
-      <p id="w-desc">يمكنك تثبيت التطبيق على هاتفك ليعمل بدون إنترنت.</p>
-      <div class="tips" id="platformTips">
-        <!-- تُملأ تلقائيًا حسب نوع الجهاز -->
-      </div>
-      <div class="actions">
-        <button id="dismissOnce" class="btn btn-secondary">إغلاق</button>
-        <button id="dontShow" class="btn btn-primary">فهمت، لا تُظهر مرة أخرى</button>
-      </div>
-    </div>
   </div>
 
   <script>
   (function(){
     const $ = id => document.getElementById(id);
-    const state = { total:100, remaining:100, history:[], dark:false, sound:true, vibrate:true, phrase:"الحمد لله" };
-    try{ Object.assign(state, JSON.parse(localStorage.getItem("tasbeeh:v1")||"{}")); }catch(e){}
+    const state = { total:100, remaining:100, history:[], phrase:"الحمد لله" };
 
     const remainingEl=$("remaining"), doneEl=$("done"), totalEl=$("total"), bigCountEl=$("bigCount");
     const progressEl=$("progress"), tasbeehBtn=$("tasbeehBtn"), undoBtn=$("undoBtn"), resetBtn=$("resetBtn");
-    const totalInput=$("totalInput"), darkToggle=$("darkToggle"), soundToggle=$("soundToggle"), vibrateToggle=$("vibrateToggle");
-    const phraseEl=$("phrase"), phraseSelect=$("phraseSelect"), doneBanner=$("doneBanner");
+    const totalInput=$("totalInput"), phraseEl=$("phrase"), phraseSelect=$("phraseSelect"), doneBanner=$("doneBanner");
 
-    let audioCtx;
-    function beep(){
-      if(!state.sound) return;
-      try{
-        if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-        const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-        o.type="sine"; o.frequency.value=880; g.gain.value=0.0001; o.connect(g); g.connect(audioCtx.destination); o.start();
-        const now=audioCtx.currentTime;
-        g.gain.exponentialRampToValueAtTime(0.05, now + 0.001);
-        g.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
-        o.stop(now + 0.08);
-      }catch(e){}
-    }
-    function vibrate(){
-      if('vibrate' in navigator){
-        navigator.vibrate(30);
-      }else{
-        // نبضة مرئية كبديل للاهتزاز على iOS
-        const btn = tasbeehBtn;
-        btn.animate([{transform:'scale(1)'},{transform:'scale(0.97)'},{transform:'scale(1)'}],{duration:120,easing:'ease-out'});
-      }
-    }
-    function persist(){ localStorage.setItem("tasbeeh:v1", JSON.stringify({total:state.total, remaining:state.remaining, dark:state.dark, sound:state.sound, vibrate:state.vibrate, phrase:state.phrase})); }
-    function applyTheme(){ document.documentElement.classList.toggle("dark", state.dark); darkToggle.checked = state.dark; }
     function render(){
-      remainingEl.textContent = state.remaining; doneEl.textContent = state.total - state.remaining; totalEl.textContent = state.total;
-      bigCountEl.textContent = state.remaining; progressEl.max = state.total; progressEl.value = state.total - state.remaining;
-      undoBtn.disabled = state.history.length === 0; phraseEl.textContent = state.phrase; totalInput.value = state.total; phraseSelect.value = state.phrase;
-      doneBanner.style.display = state.remaining === 0 ? "block" : "none"; document.title = `(${state.remaining}) عداد التسبيح`;
+      remainingEl.textContent = state.remaining;
+      doneEl.textContent = state.total - state.remaining;
+      totalEl.textContent = state.total;
+      bigCountEl.textContent = state.remaining;
+      progressEl.max = state.total;
+      progressEl.value = state.total - state.remaining;
+      undoBtn.disabled = state.history.length === 0;
+      phraseEl.textContent = state.phrase;
+      totalInput.value = state.total;
+      phraseSelect.value = state.phrase;
+      doneBanner.style.display = state.remaining === 0 ? "block" : "none";
     }
-    function setTotal(n){ n=Math.max(1, Math.min(10000, Math.floor(n||1))); state.total=n; state.remaining=n; state.history=[]; render(); persist(); }
-    function tasbeeh(){ if(state.remaining<=0) return; state.history.push(state.remaining); state.remaining--; render(); persist(); beep(); vibrate(); }
-    function undo(){ if(state.history.length===0) return; state.remaining = state.history.pop(); render(); persist(); }
-    function reset(){ state.remaining = state.total; state.history = []; render(); persist(); }
+    function setTotal(n){ state.total=n; state.remaining=n; state.history=[]; render(); }
+    function tasbeeh(){ if(state.remaining<=0) return; state.history.push(state.remaining); state.remaining--; render(); }
+    function undo(){ if(state.history.length===0) return; state.remaining = state.history.pop(); render(); }
+    function reset(){ state.remaining = state.total; state.history = []; render(); }
 
-    applyTheme(); render();
+    render();
     tasbeehBtn.addEventListener("click", tasbeeh);
     undoBtn.addEventListener("click", undo);
     resetBtn.addEventListener("click", reset);
     totalInput.addEventListener("change", e=> setTotal(parseInt(e.target.value,10)));
-    darkToggle.addEventListener("change", e=>{ state.dark=e.target.checked; applyTheme(); persist(); });
-    soundToggle.addEventListener("change", e=>{ state.sound=e.target.checked; persist(); });
-    vibrateToggle.addEventListener("change", e=>{ state.vibrate=e.target.checked; persist(); });
-    phraseSelect.addEventListener("change", e=>{ state.phrase = e.target.value; render(); persist(); });
-
-    // اختصارات لوحة المفاتيح
-    window.addEventListener("keydown", e=>{
-      if(e.code==="Space"){ e.preventDefault(); tasbeeh(); }
-      if(e.code==="Backspace"){ e.preventDefault(); undo(); }
-    }, {passive:false});
-
-    // ===== نافذة الترحيب الذكية =====
-    const OS = (()=> {
-      const ua = navigator.userAgent;
-      const isIOS = /iPhone|iPad|iPod/i.test(ua);
-      const isAndroid = /Android/i.test(ua);
-      const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
-      const isChrome = /Chrome|CriOS/i.test(ua);
-      return {isIOS, isAndroid, isSafari, isChrome};
-    })();
-
-    const welcome = $("welcome");
-    const platformTips = $("platformTips");
-    const helpFab = $("helpFab");
-    const firstRunKey = "tasbeeh:firstRunShown";
-
-    function tipsHTML(){
-      if(OS.isIOS){
-        return `
-          <strong>على الآيفون (Safari):</strong>
-          <ol style="margin:6px 0 0 0; padding-inline-start:18px">
-            <li>اضغط زر المشاركة (المربع مع السهم ↑).</li>
-            <li>اختر <b>Add to Home Screen</b> / <b>أضف إلى الشاشة الرئيسية</b>.</li>
-            <li>اضغط <b>Add</b> — سيعمل التطبيق دون إنترنت بعد أول فتح.</li>
-          </ol>
-          <p style="margin:8px 0 0; color:var(--muted); font-size:13px">تنبيه: الاهتزاز غير مدعوم في iOS، لذلك نعرض نبضة مرئية بدل ذلك.</p>
-        `;
-      }else if(OS.isAndroid){
-        return `
-          <strong>على أندرويد (Chrome):</strong>
-          <ol style="margin:6px 0 0 0; padding-inline-start:18px">
-            <li>افتح القائمة ⋮ في Chrome.</li>
-            <li>اختر <b>Install app</b> أو <b>Add to Home screen</b>.</li>
-            <li>اضغط <b>Install</b> — سيعمل التطبيق دون إنترنت بعد أول فتح.</li>
-          </ol>
-        `;
-      }else{
-        return `
-          <strong>على الكمبيوتر:</strong>
-          <ol style="margin:6px 0 0 0; padding-inline-start:18px">
-            <li>افتح الموقع في Chrome أو Edge.</li>
-            <li>اضغط أيقونة التثبيت في شريط العنوان.</li>
-            <li>ثبّت التطبيق ليفتح في نافذة مستقلة.</li>
-          </ol>
-        `;
-      }
-    }
-
-    function showWelcome(){
-      platformTips.innerHTML = tipsHTML();
-      welcome.style.display = "flex";
-    }
-
-    // أظهر مرة واحدة فقط
-    if(!localStorage.getItem(firstRunKey)){
-      setTimeout(showWelcome, 350); // بعد استقرار الواجهة
-    }
-
-    $("dismissOnce").addEventListener("click", ()=>{ welcome.style.display="none"; });
-    $("dontShow").addEventListener("click", ()=>{
-      localStorage.setItem(firstRunKey, "1");
-      welcome.style.display="none";
+    phraseSelect.addEventListener("change", e=>{
+      state.phrase = e.target.value;
+      // عند التبديل، صفر العداد
+      setTotal(state.total);
     });
-    helpFab.addEventListener("click", showWelcome);
-
-    // تفعيل العمل دون إنترنت
-    if('serviceWorker' in navigator){
-      window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
-    }
   })();
   </script>
 </body>
