@@ -1,101 +1,152 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
-  <title>عداد التسبيح — 100 مرة</title>
-  <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="theme-color" content="#2563eb" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="التسبيح" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عداد التسبيح</title>
   <style>
-    /* (نفس التنسيقات السابقة) */
+    body {
+      font-family: 'Tahoma', sans-serif;
+      background-color: #f4f7fb;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #2563eb;
+      margin-bottom: 10px;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 15px 0;
+    }
+    .box {
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 30%;
+    }
+    .big {
+      font-size: 40px;
+      color: #111;
+      margin: 15px 0;
+    }
+    button {
+      background-color: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      margin: 5px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e4ed8;
+    }
+    .controls {
+      margin-top: 15px;
+    }
+    select, input {
+      padding: 8px;
+      margin: 8px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <main class="card">
-      <h1>عداد التسبيح — 100 مرة</h1>
-      <div class="stats">
-        <div class="stat"><div class="num" id="remaining">100</div><div class="label">المتبقي</div></div>
-        <div class="stat"><div class="num" id="done">0</div><div class="label">المنجز</div></div>
-        <div class="stat"><div class="num" id="total">100</div><div class="label">الإجمالي</div></div>
-      </div>
+  <h1>📿 عداد التسبيح — 100 مرة</h1>
+  <p>كل ضغطة تُنقص العدد واحدًا حتى تصل إلى الصفر.</p>
 
-      <progress id="progress" max="100" value="0"></progress>
-      <div class="phrase" id="phrase">الحمد لله</div>
-      <div class="big-count" id="bigCount">100</div>
+  <div class="stats">
+    <div class="box"><div>الإجمالي</div><div id="total">100</div></div>
+    <div class="box"><div>المنجز</div><div id="done">0</div></div>
+    <div class="box"><div>المتبقي</div><div id="remaining">100</div></div>
+  </div>
 
-      <div class="row"><button id="tasbeehBtn" class="btn btn-primary">تسبيح</button></div>
-      <div class="row">
-        <button id="undoBtn" class="btn" disabled>تراجع</button>
-        <button id="resetBtn" class="btn">إعادة الضبط</button>
-      </div>
+  <h2 id="phrase">الحمد لله</h2>
+  <div class="big" id="counter">100</div>
 
-      <div class="row">
-        <div class="control">
-          <label for="totalInput">الإجمالي</label>
-          <input id="totalInput" type="number" min="1" max="10000" value="100">
-        </div>
-        <div class="control">
-          <label for="phraseSelect">العبارة</label>
-          <select id="phraseSelect">
-            <option value="سبحان الله">سبحان الله</option>
-            <option value="الحمد لله" selected>الحمد لله</option>
-            <option value="الله أكبر">الله أكبر</option>
-            <option value="لا إله إلا الله">لا إله إلا الله</option>
-            <option value="استغفر الله">استغفر الله</option>
-            <option value="لا إله إلا أنت سبحانك إني كنت من الظالمين">لا إله إلا أنت سبحانك إني كنت من الظالمين</option>
-            <option value="لا حول ولا قوة إلا بالله العلي العظيم">لا حول ولا قوة إلا بالله العلي العظيم</option>
-            <option value="اللهم صل وسلم وبارك على سيدنا محمد">اللهم صل وسلم وبارك على سيدنا محمد</option>
-          </select>
-        </div>
-      </div>
+  <button id="tasbeehBtn">تسبيح</button>
+  <div class="controls">
+    <button id="undoBtn">تراجع</button>
+    <button id="resetBtn">إعادة الضبط</button>
+  </div>
 
-      <div id="doneBanner" class="done">تم الإكمال! بارك الله فيك.</div>
-    </main>
+  <div class="controls">
+    <label>الإجمالي: <input type="number" id="totalInput" value="100"></label>
+    <label>العبارة: 
+      <select id="phraseSelect">
+        <option>سبحان الله</option>
+        <option>الحمد لله</option>
+        <option>الله أكبر</option>
+        <option>لا إله إلا الله</option>
+        <option>استغفر الله</option>
+        <option>لا إله إلا أنت سبحانك إني كنت من الظالمين</option>
+        <option>لا حول ولا قوة إلا بالله العلي العظيم</option>
+        <option>اللهم صل وسلم وبارك على سيدنا محمد</option>
+      </select>
+    </label>
   </div>
 
   <script>
-  (function(){
-    const $ = id => document.getElementById(id);
-    const state = { total:100, remaining:100, history:[], phrase:"الحمد لله" };
+    let total = 100, remaining = 100, done = 0;
+    const totalEl = document.getElementById("total");
+    const remainingEl = document.getElementById("remaining");
+    const doneEl = document.getElementById("done");
+    const counterEl = document.getElementById("counter");
+    const phraseEl = document.getElementById("phrase");
+    const btn = document.getElementById("tasbeehBtn");
 
-    const remainingEl=$("remaining"), doneEl=$("done"), totalEl=$("total"), bigCountEl=$("bigCount");
-    const progressEl=$("progress"), tasbeehBtn=$("tasbeehBtn"), undoBtn=$("undoBtn"), resetBtn=$("resetBtn");
-    const totalInput=$("totalInput"), phraseEl=$("phrase"), phraseSelect=$("phraseSelect"), doneBanner=$("doneBanner");
-
-    function render(){
-      remainingEl.textContent = state.remaining;
-      doneEl.textContent = state.total - state.remaining;
-      totalEl.textContent = state.total;
-      bigCountEl.textContent = state.remaining;
-      progressEl.max = state.total;
-      progressEl.value = state.total - state.remaining;
-      undoBtn.disabled = state.history.length === 0;
-      phraseEl.textContent = state.phrase;
-      totalInput.value = state.total;
-      phraseSelect.value = state.phrase;
-      doneBanner.style.display = state.remaining === 0 ? "block" : "none";
-    }
-    function setTotal(n){ state.total=n; state.remaining=n; state.history=[]; render(); }
-    function tasbeeh(){ if(state.remaining<=0) return; state.history.push(state.remaining); state.remaining--; render(); }
-    function undo(){ if(state.history.length===0) return; state.remaining = state.history.pop(); render(); }
-    function reset(){ state.remaining = state.total; state.history = []; render(); }
-
-    render();
-    tasbeehBtn.addEventListener("click", tasbeeh);
-    undoBtn.addEventListener("click", undo);
-    resetBtn.addEventListener("click", reset);
-    totalInput.addEventListener("change", e=> setTotal(parseInt(e.target.value,10)));
-    phraseSelect.addEventListener("change", e=>{
-      state.phrase = e.target.value;
-      // عند التبديل، صفر العداد
-      setTotal(state.total);
+    btn.addEventListener("click", () => {
+      if (remaining > 0) {
+        remaining--;
+        done++;
+        updateUI();
+        if (navigator.vibrate) navigator.vibrate(100); // الاهتزاز
+      }
     });
-  })();
+
+    document.getElementById("undoBtn").addEventListener("click", () => {
+      if (done > 0) {
+        remaining++;
+        done--;
+        updateUI();
+      }
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      resetCounter();
+    });
+
+    document.getElementById("totalInput").addEventListener("change", e => {
+      total = parseInt(e.target.value) || 100;
+      resetCounter();
+    });
+
+    document.getElementById("phraseSelect").addEventListener("change", e => {
+      phraseEl.textContent = e.target.value;
+      resetCounter();
+    });
+
+    function updateUI() {
+      totalEl.textContent = total;
+      remainingEl.textContent = remaining;
+      doneEl.textContent = done;
+      counterEl.textContent = remaining;
+    }
+
+    function resetCounter() {
+      remaining = total;
+      done = 0;
+      updateUI();
+    }
+
+    updateUI();
   </script>
 </body>
 </html>
